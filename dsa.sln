@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F95F45E4-25D4-407F-BCA0-E37DCCDFC269}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "algorithms", "src\algorithms\algorithms.csproj", "{C11963F0-5E03-465B-B93D-0CF2892DB67A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C11963F0-5E03-465B-B93D-0CF2892DB67A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C11963F0-5E03-465B-B93D-0CF2892DB67A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C11963F0-5E03-465B-B93D-0CF2892DB67A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C11963F0-5E03-465B-B93D-0CF2892DB67A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C11963F0-5E03-465B-B93D-0CF2892DB67A} = {F95F45E4-25D4-407F-BCA0-E37DCCDFC269}
+	EndGlobalSection
+EndGlobal
