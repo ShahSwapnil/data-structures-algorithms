@@ -3,16 +3,16 @@
 public class MergeSorter<T> where T: IComparable<T>
 {
 
-    public SortOrder SortOrder { get; set; }
+    private SortOrder _sortOrder { get; set; }
 
     public MergeSorter()
     {
-        SortOrder = SortOrder.Ascending;
+        _sortOrder = SortOrder.Ascending;
     }
 
     public MergeSorter(SortOrder sortOrder)
     {
-        this.SortOrder = sortOrder;
+        this._sortOrder = sortOrder;
     }    
 
     public void Sort(T[]? numbers) 
@@ -94,7 +94,7 @@ public class MergeSorter<T> where T: IComparable<T>
 
     private bool Comparison(T a, T b)
     {
-        if ( SortOrder == SortOrder.Ascending )
+        if ( _sortOrder == SortOrder.Ascending )
         {
             return a.CompareTo(b) < 1;
         }
