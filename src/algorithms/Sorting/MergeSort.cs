@@ -1,16 +1,32 @@
 ﻿namespace algorithms;
 
-public class MergeSort
+public class MergeSort<T> where T: IComparable<T>
 {
-    public IComparer<int> Comparer { get; set; }
 
-    public MergeSort(IComparer<int> comparer)
+    public SortOrder SortOrder { get; set; }
+
+    public MergeSort()
     {
-        Comparer = comparer;
+        SortOrder = SortOrder.Ascending;
     }
-    public void Sort(int[] numbers) => helper(numbers, 0, numbers.Length - 1);
 
-    private void helper(int[] nums, int start, int end)
+    public MergeSort(SortOrder sortOrder)
+    {
+        this.SortOrder = sortOrder;
+    }    
+
+    public void Sort(T[]? numbers) 
+    {
+        if ( numbers is null )
+            return;
+
+        if ( numbers.Length == 0 )
+            return;
+
+        helper(numbers, 0, numbers.Length - 1);
+    } 
+
+    private void helper(T[] nums, int start, int end)
     {
         // leaf worker
         if ( start == end )
@@ -30,12 +46,14 @@ public class MergeSort
         int j = mid + 1;
 
         int auxArraySize = end - start + 1;
-        int[] aux = new int[auxArraySize];
+        T[] aux = new T[auxArraySize];
         int auxCounter = 0;
 
         while ( i <= mid && j <= end )
         {
-            if ( Comparer.Compare(nums[i], nums[j]) < 1 )
+            //if ( Comparer.Compare(nums[i], nums[j]) < 1 )
+            //if ( nums[i].CompareTo(nums[j]) < 1 )
+            if ( Comparison(nums[i], nums[j]) )             
             {
                 aux[auxCounter] = nums[i];
                 i++;
@@ -71,5 +89,17 @@ public class MergeSort
         }
 
         return;
+    }
+
+    private bool Comparison(T a, T b)
+    {
+        if ( SortOrder == SortOrder.Ascending )
+        {
+            return a.CompareTo(b) < 1;
+        }
+        else
+        {
+            return a.CompareTo(b) > -1;
+        }
     }
 }
