@@ -51,6 +51,12 @@ public class QuickSorter : BaseSorter
             return;
 
         // internal node worker
+        // Select a pivot randomly
+        Random random = new Random();
+        int pivotIndex = random.Next(start, end);
+
+        swap(input, start, pivotIndex);
+
         Pivot pivot;
 
         if (_partition == QuickSortPartitionEnum.Hoare)
