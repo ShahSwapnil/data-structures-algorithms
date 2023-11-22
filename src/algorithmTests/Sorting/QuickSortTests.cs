@@ -1,10 +1,64 @@
-﻿using Xunit.Abstractions;
+﻿using algorithmTests.Utilities;
+using Xunit.Abstractions;
 
 namespace algorithmTests;
 
 public class QuickSortTests
 {
-    public class SortIntegersAscendingWithLomuto : QuickSorterTestsBase
+
+    public class QuickSortRandomObjectAscending : QuickSorterTestsBase<RandomUnitTestObject>
+    {
+        public QuickSortRandomObjectAscending(ITestOutputHelper helper)
+            : base(helper) { }
+
+        [Fact]
+        public void Sort()
+        {
+            RandomUnitTestObject[] objects = [
+                new RandomUnitTestObject { ID = 10 },
+                new RandomUnitTestObject { ID = 1 },
+                new RandomUnitTestObject { ID = 15 },
+                new RandomUnitTestObject { ID = 3 },
+                new RandomUnitTestObject { ID = 0 }
+            ];
+
+            Dut.Sort(objects);
+
+            Assert.Collection(objects
+                , obj => { Assert.Equal(0, obj.ID); }
+                , obj => { Assert.Equal(1, obj.ID); }
+                , obj => { Assert.Equal(3, obj.ID); }
+                , obj => { Assert.Equal(10, obj.ID); }
+                , obj => { Assert.Equal(15, obj.ID); }
+            );
+        }
+
+        [Fact]
+        public void Sort_Duplicates_Stability()
+        {
+            RandomUnitTestObject[] objects = [
+                new RandomUnitTestObject { ID = 10, SecondaryID = 2 },
+                new RandomUnitTestObject { ID = 10, SecondaryID = 1 },
+                new RandomUnitTestObject { ID = 1 },
+                new RandomUnitTestObject { ID = 15 },
+                new RandomUnitTestObject { ID = 3 },
+                new RandomUnitTestObject { ID = 0 }
+            ];
+
+            Dut.Sort(objects);
+
+            // Can't guarantee the order of objects when there are duplicates. There for cannot check SecondaryID
+            Assert.Collection(objects
+                , obj => { Assert.Equal(0, obj.ID); }
+                , obj => { Assert.Equal(1, obj.ID); }
+                , obj => { Assert.Equal(3, obj.ID); }
+                , obj => { Assert.Equal(10, obj.ID); }
+                , obj => { Assert.Equal(10, obj.ID); }
+                , obj => { Assert.Equal(15, obj.ID); }
+            );
+        }
+    }
+    public class SortIntegersAscendingWithLomuto : QuickSorterTestsBase<int>
     {
         public SortIntegersAscendingWithLomuto(ITestOutputHelper testOutputHelper)
             : base(QuickSortPartitionEnum.Lomuto, testOutputHelper) { }
@@ -49,7 +103,7 @@ public class QuickSortTests
             );
         }
     }
-    public class SortIntegersDescendingWithLomuto : QuickSorterTestsBase
+    public class SortIntegersDescendingWithLomuto : QuickSorterTestsBase<int>
     {
         public SortIntegersDescendingWithLomuto(ITestOutputHelper testOutputHelper)
             : base(QuickSortPartitionEnum.Lomuto, SortOrder.Descending, testOutputHelper) { }
@@ -95,7 +149,7 @@ public class QuickSortTests
         }
     }
 
-    public class SortIntegersDescendingWithHoare : QuickSorterTestsBase
+    public class SortIntegersDescendingWithHoare : QuickSorterTestsBase<int>
     {
         public SortIntegersDescendingWithHoare(ITestOutputHelper testOutputHelper) 
             : base(SortOrder.Descending, testOutputHelper) {}
@@ -141,7 +195,7 @@ public class QuickSortTests
         }
     }
 
-    public class SortIntegersAscendingWithHoare : QuickSorterTestsBase
+    public class SortIntegersAscendingWithHoare : QuickSorterTestsBase<int>
     {
         public SortIntegersAscendingWithHoare(ITestOutputHelper testOutputHelper) 
             : base(testOutputHelper) {}
@@ -218,9 +272,9 @@ public class QuickSortTests
     }
 }
 
-public class QuickSorterTestsBase
+public class QuickSorterTestsBase<T> where T : IComparable<T>, IEquatable<T>
 {
-    protected QuickSorter Dut { get; set; }
+    protected QuickSorter<T> Dut { get; set; }
 
     protected IAlgoLogger Logger { get; set; }
 
@@ -235,6 +289,6 @@ public class QuickSorterTestsBase
     public QuickSorterTestsBase(QuickSortPartitionEnum partition,SortOrder sortOrder, ITestOutputHelper testOutputHelper)
     {
         Logger = new UnitTestLogger(testOutputHelper);
-        Dut = new QuickSorter(partition,sortOrder, Logger);
+        Dut = new QuickSorter<T>(partition,sortOrder, Logger);
     }
 }

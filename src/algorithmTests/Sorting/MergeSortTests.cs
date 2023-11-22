@@ -1,4 +1,5 @@
 ﻿using algorithms;
+using algorithmTests.Utilities;
 using Xunit.Abstractions;
 
 namespace algorithmTests;
@@ -140,7 +141,7 @@ public class MergeSortTests
         }
     }
 
-    public class MergeSortRandomObjectAscending : MergeSortTestsBase<RandomObject>
+    public class MergeSortRandomObjectAscending : MergeSortTestsBase<RandomUnitTestObject>
     {
         public MergeSortRandomObjectAscending(ITestOutputHelper helper) 
             : base(helper) {}
@@ -148,12 +149,12 @@ public class MergeSortTests
         [Fact]
         public void Sort()
         {
-            RandomObject[] objects = [ 
-                new RandomObject { ID = 10},
-                new RandomObject { ID = 1},
-                new RandomObject { ID = 15},
-                new RandomObject { ID = 3},
-                new RandomObject { ID = 0}
+            RandomUnitTestObject[] objects = [ 
+                new RandomUnitTestObject { ID = 10},
+                new RandomUnitTestObject { ID = 1},
+                new RandomUnitTestObject { ID = 15},
+                new RandomUnitTestObject { ID = 3},
+                new RandomUnitTestObject { ID = 0}
             ];
 
             Dut.Sort(objects);
@@ -166,6 +167,36 @@ public class MergeSortTests
                 , obj => { Assert.Equal(15, obj.ID); }
             );
         }
+
+        [Fact]
+        public void Sort_Duplicates_Stability()
+        {
+            RandomUnitTestObject[] objects = [
+                new RandomUnitTestObject { ID = 10, SecondaryID = 2 },
+                new RandomUnitTestObject { ID = 10, SecondaryID = 1 },
+                new RandomUnitTestObject { ID = 1 },
+                new RandomUnitTestObject { ID = 15 },
+                new RandomUnitTestObject { ID = 3 },
+                new RandomUnitTestObject { ID = 0 }
+            ];
+
+            Dut.Sort(objects);
+
+            Assert.Collection(objects
+                , obj => { Assert.Equal(0, obj.ID); }
+                , obj => { Assert.Equal(1, obj.ID); }
+                , obj => { Assert.Equal(3, obj.ID); }
+                , obj => { 
+                    Assert.Equal(10, obj.ID);
+                    Assert.Equal(2, obj.SecondaryID);
+                }
+                , obj => {
+                    Assert.Equal(10, obj.ID);
+                    Assert.Equal(1, obj.SecondaryID);
+                }
+                , obj => { Assert.Equal(15, obj.ID); }
+            );
+        }
     }
 }
 
@@ -173,27 +204,14 @@ public class MergeSortTestsBase<T> where T: IComparable<T>
 {
     protected MergeSorter<T> Dut { get; set; }
 
-    ITestOutputHelper Logger { get; set; }
+    IAlgoLogger Logger { get; set; }
 
     public MergeSortTestsBase(ITestOutputHelper helper)
         : this(SortOrder.Ascending, helper) {}
 
     public MergeSortTestsBase(SortOrder mergeSortOrder, ITestOutputHelper helper)        
     {
-        Dut = new MergeSorter<T>(mergeSortOrder);
-        Logger = helper;
-    }
-}
-
-public class RandomObject : IComparable<RandomObject>
-{
-    public int ID { get; set; }
-
-    public int CompareTo(RandomObject? other)
-    {
-        if ( other is null )
-            throw new ArgumentNullException("other");
-
-        return ID.CompareTo(other.ID);
+        Logger = new UnitTestLogger(helper);
+        Dut = new MergeSorter<T>(mergeSortOrder, Logger);
     }
 }

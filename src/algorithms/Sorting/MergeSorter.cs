@@ -21,34 +21,19 @@
 ///   
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class MergeSorter<T> where T: IComparable<T>
+public class MergeSorter<T> : BaseSorter<T> where T: IComparable<T>
 {
 
-    private SortOrder _sortOrder { get; set; }
+    public MergeSorter(IAlgoLogger logger)
+        : this(SortOrder.Ascending, logger) { }
 
-    public MergeSorter()
+    public MergeSorter(SortOrder sortOrder, IAlgoLogger logger)
+        : base(sortOrder, logger) { }
+
+    protected override void helper(T[] input, int start, int end)
     {
-        _sortOrder = SortOrder.Ascending;
-    }
+        LogCurrentState("Beginning", input, start, end);
 
-    public MergeSorter(SortOrder sortOrder)
-    {
-        this._sortOrder = sortOrder;
-    }    
-
-    public void Sort(T[]? numbers) 
-    {
-        if ( numbers is null )
-            return;
-
-        if ( numbers.Length == 0 )
-            return;
-
-        helper(numbers, 0, numbers.Length - 1);
-    } 
-
-    private void helper(T[] nums, int start, int end)
-    {
         // leaf worker
         // The array will always have one element when at the leaf node. 
         if ( start == end )
@@ -58,10 +43,10 @@ public class MergeSorter<T> where T: IComparable<T>
         int mid = start + ((end-start) / 2);
 
         // left subtree
-        helper(nums, start, mid);
+        helper(input, start, mid);
 
         // right subtree
-        helper(nums, mid + 1, end);
+        helper(input, mid + 1, end);
 
         // merge the results from the two subtrees
         int i = start;
@@ -70,19 +55,19 @@ public class MergeSorter<T> where T: IComparable<T>
         int auxArraySize = end - start + 1;
         T[] aux = new T[auxArraySize];
         int auxCounter = 0;
-
+        
         while ( i <= mid && j <= end )
         {
             //if ( Comparer.Compare(nums[i], nums[j]) < 1 )
             //if ( nums[i].CompareTo(nums[j]) < 1 )
-            if ( Comparison(nums[i], nums[j]) )             
+            if ( Comparison(input[i], input[j]) )             
             {
-                aux[auxCounter] = nums[i];
+                aux[auxCounter] = input[i];
                 i++;
             }
             else
             {
-                aux[auxCounter] = nums[j];
+                aux[auxCounter] = input[j];
                 j++;
             }
             auxCounter++;            
@@ -90,14 +75,14 @@ public class MergeSorter<T> where T: IComparable<T>
 
         while ( i <= mid )
         {
-            aux[auxCounter] = nums[i];
+            aux[auxCounter] = input[i];
             i++;
             auxCounter++;
         }
 
         while ( j <= end )
         {
-            aux[auxCounter] = nums[end];
+            aux[auxCounter] = input[end];
             j++;
             auxCounter++;
         }
@@ -106,16 +91,16 @@ public class MergeSorter<T> where T: IComparable<T>
         int numbersIdx = start;
         for ( int idx = 0; idx < aux.Length; idx++ )
         {
-            nums[numbersIdx] = aux[idx];
+            input[numbersIdx] = aux[idx];
             numbersIdx++;
         }
 
-        return;
+        LogCurrentState("Ending", input, start, end);
     }
 
     private bool Comparison(T a, T b)
     {
-        if ( _sortOrder == SortOrder.Ascending )
+        if ( SortOrder == SortOrder.Ascending )
         {
             return a.CompareTo(b) < 1;
         }

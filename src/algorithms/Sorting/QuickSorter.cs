@@ -1,7 +1,7 @@
 ﻿
 namespace algorithms;
 
-public class QuickSorter : BaseSorter
+public class QuickSorter<T> : BaseSorter<T> where T : IComparable<T>, IEquatable<T>
 {
     private QuickSortPartitionEnum _partition;
 
@@ -19,18 +19,7 @@ public class QuickSorter : BaseSorter
         _partition = partition;
     }
 
-    public override void Sort(int[]? input)
-    {
-        if ( input is null )
-            return;
-
-        if ( input.Length == 0 )
-            return;
-
-        helper(input, 0, input.Length - 1);
-    }
-
-    private void helper(int[] input, int start, int end)
+    protected override void helper(T[] input, int start, int end)
     {
         LogCurrentState("Beginning", input, start, end);
 
@@ -49,7 +38,7 @@ public class QuickSorter : BaseSorter
 
         swap(input, start, pivotIndex);
 
-        Pivot pivot;
+        PivotSection pivot;
 
         LogCurrentState("Before Partitioning", input, start, end);
 
@@ -71,10 +60,10 @@ public class QuickSorter : BaseSorter
     }
 
 
-    private Pivot HoarePartitioning(int[] input, int start, int end)
+    private PivotSection HoarePartitioning(T[] input, int start, int end)
     {
         // Partitioning
-        int pivotValue = input[start];
+        T pivotValue = input[start];
         int before = start + 1;
         int after = end;
 
@@ -92,22 +81,22 @@ public class QuickSorter : BaseSorter
             }
         }
 
-        while (after >= start && input[after] == pivotValue)
+        while (after >= start && input[after].Equals(pivotValue))
             after--;
 
         if ( after > start )
             swap(input, start, after);
 
 
-        while (before <= end && input[before] == pivotValue)
+        while (before <= end && input[before].Equals(pivotValue))
             before++;
 
-        return new Pivot { start = after - 1, end = before };
+        return new PivotSection { start = after - 1, end = before };
     }
 
-    private Pivot LomutoPartitioning(int[] input, int start, int end)
+    private PivotSection LomutoPartitioning(T[] input, int start, int end)
     {
-        int pivotValue = input[start];
+        T pivotValue = input[start];
         int before = start;
         int pivot = start;
         int after = start;
@@ -152,24 +141,10 @@ public class QuickSorter : BaseSorter
         // swap the pivot value to the beginning of pivot
         swap(input, start, before);
 
-        return new Pivot { start = before - 1, end = pivot + 1 };
+        return new PivotSection { start = before - 1, end = pivot + 1 };
     }
 
-    private void LogCurrentState(string description, int[] input, int start, int end)
-    {
-        Logger.Info("{0} - Start: {1} End: {2} Input Array: [{3}]",
-            description,
-            start,
-            end,
-            string.Join(", ",
-                input.Select((integer, idx) => new { integer, idx })
-                    .Where(x => start <= x.idx && x.idx <= end)
-                    .Select(x => x.integer)
-            )
-        );
-    }
-
-    private bool beforePivot(int val, int pivot)
+    private bool beforePivot(T val, T pivot)
     {
         if (SortOrder == SortOrder.Ascending)
         {
@@ -179,7 +154,7 @@ public class QuickSorter : BaseSorter
         return pivot.CompareTo(val) < 0;
     }
 
-    private bool afterPivot(int val, int pivot)
+    private bool afterPivot(T val, T pivot)
     {
         if (SortOrder == SortOrder.Ascending)
         {
@@ -189,14 +164,7 @@ public class QuickSorter : BaseSorter
         return pivot.CompareTo(val) > 0;
     }
 
-    private void swap(int[] input, int indexA, int indexB)
-    {
-        int temp = input[indexA];
-        input[indexA] = input[indexB];
-        input[indexB] = temp;
-    }
-
-    struct Pivot
+    private struct PivotSection
     {
         public int start;
         public int end;
