@@ -169,7 +169,7 @@ public class MergeSortTests
     }
 }
 
-public abstract class MergeSortTestsBase<T> where T: IComparable<T>
+public class MergeSortTestsBase<T> where T: IComparable<T>
 {
     protected MergeSorter<T> Dut { get; set; }
 
