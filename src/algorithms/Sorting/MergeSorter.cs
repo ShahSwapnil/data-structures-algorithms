@@ -1,5 +1,26 @@
 ﻿namespace algorithms;
 
+/// <summary>
+/// Implements Merge sort Algorithm. 
+/// 1. Divide the problem into smaller pieces
+/// 2. using recursion solve the smaller problem
+/// 3. Merge the solutions from left and right subtree. 
+/// 
+/// 
+///     [0 |1|2 |3|4 |5 |6 |7 ]
+///     [14|4|28|1|75|50|36|18]
+///   Lv  
+///   0         [14|4|28|1|75|50|36|18]
+///   1     [14|4|28|1]       [75|50|36|18]
+///   2   [14|4]   [28|1]   [75|50]   [36|18]    <-- internal node workers
+///   3  [14] [4] [28] [1] [75] [50] [36] [18]   <-- leaf workers
+///     
+///   2   [4|14]   [1|28]   [50|75]   [18|36]    <-- internal node workers
+///   1     [1|4|14|28]       [18|36|50|75]
+///   0         [1|4|14|18|28|36|50|75]
+///   
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public class MergeSorter<T> where T: IComparable<T>
 {
 
