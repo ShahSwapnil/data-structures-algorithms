@@ -32,25 +32,17 @@ public class QuickSorter : BaseSorter
 
     private void helper(int[] input, int start, int end)
     {
-        Logger.Info("{0} - Start: {1} End: {2} Input Array: [{3}]", 
-            "Beginning",
-            start, 
-            end, 
-            string.Join(", ", 
-                input.Select((integer, idx) => new { integer, idx })
-                    .Where(x => start <= x.idx && x.idx <= end)
-                    .Select(x => x.integer)
-            )
-        );
-        
+        LogCurrentState("Beginning", input, start, end);
+
         // left worker
         // the sub problem size can be 0 or 1
         // sub problem size is 0 when start is greater than end
         // sub problem size is 1 when start equals end
-        if ( start >= end )
+        if (start >= end)
             return;
 
         // internal node worker
+
         // Select a pivot randomly
         Random random = new Random();
         int pivotIndex = random.Next(start, end);
@@ -59,31 +51,114 @@ public class QuickSorter : BaseSorter
 
         Pivot pivot;
 
+        LogCurrentState("Before Partitioning", input, start, end);
+
         if (_partition == QuickSortPartitionEnum.Hoare)
             pivot = HoarePartitioning(input, start, end);
         else
             pivot = LomutoPartitioning(input, start, end);
 
-        Logger.Info("{0} - Start: {1} End: {2} Input Array: [{3}]",
-            "After Partitioning",
-            start,
-            end,
-            string.Join(", ",
-                input.Select((integer, idx) => new { integer, idx })
-                    .Where(x => start <= x.idx && x.idx <= end)
-                    .Select(x => x.integer)
-            )
-        );
+        LogCurrentState("After Partitioning", input, start, end);
 
         // Subtree calls
-        if ( (pivot.start - start + 1) > 1 )
+        if ((pivot.start - start + 1) > 1)
             helper(input, start, pivot.start);
 
         if ((end - pivot.end + 1) > 1)
             helper(input, pivot.end, end);
 
+        LogCurrentState("Ending", input, start, end);
+    }
+
+
+    private Pivot HoarePartitioning(int[] input, int start, int end)
+    {
+        // Partitioning
+        int pivotValue = input[start];
+        int before = start + 1;
+        int after = end;
+
+        while (before <= after)
+        {
+            if (beforePivot(input[before], pivotValue))
+                before++;
+            else if (afterPivot(input[after], pivotValue))
+                after--;
+            else
+            {
+                swap(input, before, after);
+                before++;
+                after--;
+            }
+        }
+
+        while (after >= start && input[after] == pivotValue)
+            after--;
+
+        if ( after > start )
+            swap(input, start, after);
+
+
+        while (before <= end && input[before] == pivotValue)
+            before++;
+
+        return new Pivot { start = after - 1, end = before };
+    }
+
+    private Pivot LomutoPartitioning(int[] input, int start, int end)
+    {
+        int pivotValue = input[start];
+        int before = start;
+        int pivot = start;
+        int after = start;
+        int idx = start + 1;
+
+        while ( idx <= end )
+        {
+            if (pivot < before)
+            {
+                pivot++;
+                continue;
+            }
+
+            if (after < pivot )
+            {
+                after++;
+                continue;
+            }
+
+            if (beforePivot(input[idx], pivotValue))
+            {
+                before++;
+                if ( idx != before)
+                    swap(input, before, idx);
+            }
+            else if (afterPivot(input[idx], pivotValue))
+            {
+                after++;
+                if ( idx != after)
+                    swap(input, after, idx);
+            }
+            else
+            {
+                pivot++;
+                if ( idx != pivot)
+                    swap(input, pivot, idx);
+            }
+
+            idx++;
+        }
+
+        // swap the pivot value to the beginning of pivot
+        swap(input, start, before);
+
+        return new Pivot { start = before - 1, end = pivot + 1 };
+    }
+
+    private void LogCurrentState(string description, int[] input, int start, int end)
+    {
         Logger.Info("{0} - Start: {1} End: {2} Input Array: [{3}]",
-            "Ending",
+            description,
             start,
             end,
             string.Join(", ",
@@ -94,17 +169,9 @@ public class QuickSorter : BaseSorter
         );
     }
 
-
-    private void swap(int[] input, int indexA, int indexB)
-    {
-        int temp = input[indexA];
-        input[indexA] = input[indexB];
-        input[indexB] = temp;
-    }
-
     private bool beforePivot(int val, int pivot)
     {
-        if ( SortOrder == SortOrder.Ascending )
+        if (SortOrder == SortOrder.Ascending)
         {
             return pivot.CompareTo(val) > 0;
         }
@@ -114,7 +181,7 @@ public class QuickSorter : BaseSorter
 
     private bool afterPivot(int val, int pivot)
     {
-        if ( SortOrder == SortOrder.Ascending )
+        if (SortOrder == SortOrder.Ascending)
         {
             return pivot.CompareTo(val) < 0;
         }
@@ -122,44 +189,12 @@ public class QuickSorter : BaseSorter
         return pivot.CompareTo(val) > 0;
     }
 
-    private Pivot HoarePartitioning(int[] input, int start, int end)
+    private void swap(int[] input, int indexA, int indexB)
     {
-        // Partitioning
-        int pivotValue = input[start];
-        int smaller = start + 1;
-        int bigger = end;
-
-        while (smaller <= bigger)
-        {
-            if (beforePivot(input[smaller], pivotValue))
-                smaller++;
-            else if (afterPivot(input[bigger], pivotValue))
-                bigger--;
-            else
-            {
-                swap(input, smaller, bigger);
-                smaller++;
-                bigger--;
-            }
-        }
-
-        while (bigger >= start && input[bigger] == pivotValue)
-            bigger--;
-
-        if ( bigger > start )
-            swap(input, start, bigger);
-
-
-        while (smaller <= end && input[smaller] == pivotValue)
-            smaller++;
-
-        return new Pivot { start = bigger - 1, end = smaller };
+        int temp = input[indexA];
+        input[indexA] = input[indexB];
+        input[indexB] = temp;
     }
-
-    private Pivot LomutoPartitioning(int[] input, int start, int end)
-    {
-        throw new NotImplementedException();
-    }    
 
     struct Pivot
     {
