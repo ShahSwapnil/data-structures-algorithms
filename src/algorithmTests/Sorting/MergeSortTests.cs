@@ -171,7 +171,7 @@ public class MergeSortTests
 
 public abstract class MergeSortTestsBase<T> where T: IComparable<T>
 {
-    protected MergeSort<T> Dut { get; set; }
+    protected MergeSorter<T> Dut { get; set; }
 
     ITestOutputHelper Logger { get; set; }
 
@@ -180,7 +180,7 @@ public abstract class MergeSortTestsBase<T> where T: IComparable<T>
 
     public MergeSortTestsBase(SortOrder mergeSortOrder, ITestOutputHelper helper)        
     {
-        Dut = new MergeSort<T>(mergeSortOrder);
+        Dut = new MergeSorter<T>(mergeSortOrder);
         Logger = helper;
     }
 }

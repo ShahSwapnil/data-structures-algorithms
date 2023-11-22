@@ -1,16 +1,16 @@
 ﻿namespace algorithms;
 
-public class MergeSort<T> where T: IComparable<T>
+public class MergeSorter<T> where T: IComparable<T>
 {
 
     public SortOrder SortOrder { get; set; }
 
-    public MergeSort()
+    public MergeSorter()
     {
         SortOrder = SortOrder.Ascending;
     }
 
-    public MergeSort(SortOrder sortOrder)
+    public MergeSorter(SortOrder sortOrder)
     {
         this.SortOrder = sortOrder;
     }    
@@ -29,6 +29,7 @@ public class MergeSort<T> where T: IComparable<T>
     private void helper(T[] nums, int start, int end)
     {
         // leaf worker
+        // The array will always have one element when at the leaf node. 
         if ( start == end )
             return;
 
