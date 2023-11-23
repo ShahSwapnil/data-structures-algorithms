@@ -1,4 +1,6 @@
-﻿namespace algorithms.AbstractDataTypes
+﻿using algorithms.Utilities;
+
+namespace algorithms.AbstractDataTypes
 {
     public class BinaryHeap
     {
@@ -14,6 +16,8 @@
 
         protected IAlgoLogger Logger { get; }
 
+        protected HeapType HeapType { get; }
+
         public bool IsHeapEmpty
         {
             get
@@ -23,10 +27,14 @@
         }
 
         public BinaryHeap(IAlgoLogger logger)
+            : this(new MaxHeapType(), logger) { }
+
+        public BinaryHeap(HeapType heapType, IAlgoLogger logger)
         {
             _data = new int[100];
             _currentIdx = 1;
             Logger = logger;
+            HeapType = heapType;
         }
 
         public void Insert(int number)
@@ -90,7 +98,7 @@
             if ( !isGreaterThanLeftChild && !isGreaterThanRightCild )
             {
                 // determine which child is greater
-                if ( _data[leftChildIdx] > _data[rightChildIdx] )
+                if ( HeapType.IsLeftChildPriorityGreater(_data[leftChildIdx], _data[rightChildIdx]) )
                 {
                     HeapifyDownChild(idx, leftChildIdx);
                 }
@@ -120,7 +128,7 @@
             if (idx == 1)
                 return true;
 
-            return _data[parentIdx] > _data[idx];
+            return HeapType.IsPriorityLessThanParent(_data[idx], _data[parentIdx]);
         }
 
         protected bool PriorityGreaterThanChild(int idx, int childIdx)
@@ -128,7 +136,7 @@
             if ( childIdx >= _currentIdx )
                 return true;
 
-            return _data[idx] > _data[childIdx];
+            return HeapType.IsPriorityGreaterThanChild(_data[idx], _data[childIdx]);
         }
     }
 }

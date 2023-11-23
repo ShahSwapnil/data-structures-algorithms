@@ -1,12 +1,13 @@
 ﻿using algorithms.AbstractDataTypes;
+using algorithms.Utilities;
 using System.Text;
 
 namespace algorithmTests.Utilities
 {
     public class BinaryHeapHelper : BinaryHeap
     {
-        public BinaryHeapHelper(IAlgoLogger logger)
-            : base(logger) { }
+        public BinaryHeapHelper(HeapType heapType, IAlgoLogger logger)
+            : base(heapType, logger) { }
 
         public string OutputHeapAsString()
         {

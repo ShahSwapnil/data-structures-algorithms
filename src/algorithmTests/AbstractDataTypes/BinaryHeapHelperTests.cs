@@ -1,4 +1,5 @@
-﻿using algorithmTests.Utilities;
+﻿using algorithms.Utilities;
+using algorithmTests.Utilities;
 using Xunit.Abstractions;
 
 namespace algorithmTests.AbstractDataTypes
@@ -10,7 +11,7 @@ namespace algorithmTests.AbstractDataTypes
         public BinaryHeapHelperTests(ITestOutputHelper helper)
         {
             Helper = helper;
-            _helper = new BinaryHeapHelper(new UnitTestLogger(helper));
+            _helper = new BinaryHeapHelper(new MaxHeapType(), new UnitTestLogger(helper));
         }
 
         public ITestOutputHelper Helper { get; }

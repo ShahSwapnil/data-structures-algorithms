@@ -23,7 +23,6 @@
 /// <typeparam name="T"></typeparam>
 public class MergeSorter<T> : BaseSorter<T> where T: IComparable<T>
 {
-
     public MergeSorter(IAlgoLogger logger)
         : this(SortOrder.Ascending, logger) { }
 
