@@ -113,6 +113,42 @@ namespace algorithmTests.AbstractDataTypes
                         , num => { Assert.Equal(0, num); }
                     );
             }
+
+            [Fact]
+            public void BinaryHeap_SortDescending_WithDuplicates()
+            {
+                _heap.Insert(0);
+                _heap.Insert(1);
+                _heap.Insert(2);
+                _heap.Insert(2);
+                _heap.Insert(3);
+                _heap.Insert(4);
+                _heap.Insert(5);
+                _heap.Insert(4);
+                _heap.Insert(5);
+
+                LogHeap("Before");
+                List<int> numbersSorted = new List<int>();
+                while (!_heap.IsHeapEmpty)
+                {
+                    int number = _heap.Extract();
+                    numbersSorted.Add(number);
+                }
+                LogHeap("After");
+
+                Helper.WriteLine($"[Sorted] [{string.Join("|", numbersSorted)}]");
+                Assert.Collection(numbersSorted
+                        , num => { Assert.Equal(5, num); }
+                        , num => { Assert.Equal(5, num); }
+                        , num => { Assert.Equal(4, num); }
+                        , num => { Assert.Equal(4, num); }
+                        , num => { Assert.Equal(3, num); }
+                        , num => { Assert.Equal(2, num); }
+                        , num => { Assert.Equal(2, num); }
+                        , num => { Assert.Equal(1, num); }
+                        , num => { Assert.Equal(0, num); }
+                    );
+            }
         }
 
         public class MinBinaryHeapTests : BaseHeapTests
@@ -200,6 +236,40 @@ namespace algorithmTests.AbstractDataTypes
                         , num => { Assert.Equal(0, num); }
                         , num => { Assert.Equal(1, num); }
                         , num => { Assert.Equal(2, num); }
+                        , num => { Assert.Equal(3, num); }
+                        , num => { Assert.Equal(4, num); }
+                        , num => { Assert.Equal(5, num); }
+                    );
+            }
+
+            [Fact]
+            public void BinaryHeap_SortAscending_WithDuplicates()
+            {
+                _heap.Insert(0);
+                _heap.Insert(1);
+                _heap.Insert(1);
+                _heap.Insert(2);
+                _heap.Insert(3);
+                _heap.Insert(3);
+                _heap.Insert(4);
+                _heap.Insert(5);
+
+                LogHeap("Before");
+                List<int> numbersSorted = new List<int>();
+                while (!_heap.IsHeapEmpty)
+                {
+                    int number = _heap.Extract();
+                    numbersSorted.Add(number);
+                }
+                LogHeap("After");
+
+                Helper.WriteLine($"[Sorted] [{string.Join("|", numbersSorted)}]");
+                Assert.Collection(numbersSorted
+                        , num => { Assert.Equal(0, num); }
+                        , num => { Assert.Equal(1, num); }
+                        , num => { Assert.Equal(1, num); }
+                        , num => { Assert.Equal(2, num); }
+                        , num => { Assert.Equal(3, num); }
                         , num => { Assert.Equal(3, num); }
                         , num => { Assert.Equal(4, num); }
                         , num => { Assert.Equal(5, num); }
