@@ -26,6 +26,8 @@ namespace algorithms.AbstractDataTypes
             }
         }
 
+        public int Depth => _currentIdx;
+
         public BinaryHeap(IAlgoLogger logger)
             : this(new MaxHeapType(), logger) { }
 
