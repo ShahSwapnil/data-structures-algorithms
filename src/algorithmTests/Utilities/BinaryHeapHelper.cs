@@ -4,17 +4,17 @@ using System.Text;
 
 namespace algorithmTests.Utilities
 {
-    public class BinaryHeapHelper : BinaryHeap
+    public class BinaryHeapHelper<T> : BinaryHeap<T> where T : IComparable<T>
     {
-        public BinaryHeapHelper(HeapType heapType, IAlgoLogger logger)
+        public BinaryHeapHelper(HeapType<T> heapType, IAlgoLogger logger)
             : base(heapType, logger) { }
 
         public string OutputHeapAsString()
         {
-            ReadOnlySpan<int> heapValues = _data.AsSpan<int>(1, _currentIdx - 1);
+            ReadOnlySpan<T> heapValues = _data.AsSpan<T>(1, _currentIdx - 1);
             StringBuilder sb = new StringBuilder();
 
-            foreach ( int number  in heapValues )
+            foreach ( T number  in heapValues )
             {
                 if ( sb.Length > 0 )
                     sb.Append('|');
@@ -82,18 +82,18 @@ namespace algorithmTests.Utilities
 
         private bool IsValidNode(int idx)
         {
-            return idx >= _currentIdx ? false : true ;
+            return idx >= _currentIdx ? false : true;
         }
 
-        public void SetHeap(int[] data, int currentIdx)
+        public void SetHeap(T[] data, int currentIdx)
         {
             _data = data;
             _currentIdx = currentIdx;
         }
 
-        public ReadOnlySpan<int> GetHeapValues()
+        public ReadOnlySpan<T> GetHeapValues()
         {
-            return _data.AsSpan<int>(1, _currentIdx - 1);
+            return _data.AsSpan<T>(1, _currentIdx - 1);
         }
     }
 }

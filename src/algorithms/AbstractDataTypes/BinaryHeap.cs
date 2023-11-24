@@ -1,13 +1,14 @@
 ﻿using algorithms.Utilities;
+using System;
 
 namespace algorithms.AbstractDataTypes
 {
-    public class BinaryHeap
+    public class BinaryHeap<T> where T : IComparable<T>
     {
         /// <summary>
         /// underlying data structure for the Heap
         /// </summary>
-        protected int[] _data;
+        protected T[] _data;
 
         /// <summary>
         /// Index at which a new element gets insert
@@ -16,7 +17,7 @@ namespace algorithms.AbstractDataTypes
 
         protected IAlgoLogger Logger { get; }
 
-        protected HeapType HeapType { get; }
+        protected HeapType<T> HeapType { get; }
 
         public bool IsHeapEmpty
         {
@@ -29,29 +30,29 @@ namespace algorithms.AbstractDataTypes
         public int Depth => _currentIdx;
 
         public BinaryHeap(IAlgoLogger logger)
-            : this(new MaxHeapType(), logger) { }
+            : this(new MaxHeapType<T>(), logger) { }
 
-        public BinaryHeap(HeapType heapType, IAlgoLogger logger)
+        public BinaryHeap(HeapType<T> heapType, IAlgoLogger logger)
         {
-            _data = new int[100];
+            _data = new T[100];
             _currentIdx = 1;
             Logger = logger;
             HeapType = heapType;
         }
 
-        public void Insert(int number)
+        public void Insert(T number)
         {
             _data[_currentIdx] = number;
             HeapifyUp(_currentIdx);
             _currentIdx++;
         }
 
-        public int Extract()
+        public T Extract()
         {
             if (_currentIdx == 1)
                 throw new IndexOutOfRangeException("No Data in the heap");
 
-            int rootValue = _data[1];
+            T rootValue = _data[1];
             _currentIdx--;
 
             swap(_data, 1, _currentIdx);
@@ -60,9 +61,9 @@ namespace algorithms.AbstractDataTypes
             return rootValue;
         }
 
-        private void swap(int[] data, int indexA, int indexB)
+        private void swap(T[] data, int indexA, int indexB)
         {
-            int temp = data[indexA];
+            T temp = data[indexA];
             data[indexA] = data[indexB];
             data[indexB] = temp;
         }

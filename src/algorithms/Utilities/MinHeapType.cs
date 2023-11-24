@@ -1,24 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace algorithms.Utilities
 {
-    public class MinHeapType : HeapType
+    public class MinHeapType<T> : HeapType<T> where T : IComparable<T>
     {
-        public override bool IsLeftChildPriorityGreater(int leftValue, int rightValue)
+        public override bool IsLeftChildPriorityGreater(T leftValue, T rightValue)
         {
             return Compare(leftValue, rightValue) < 0;
         }
 
-        public override bool IsPriorityGreaterThanChild(int currentValue, int childValue)
+        public override bool IsPriorityGreaterThanChild(T currentValue, T childValue)
         {
             return Compare(currentValue, childValue) <= 0;
         }
 
-        public override bool IsPriorityLessThanParent(int currentValue, int parentValue)
+        public override bool IsPriorityLessThanParent(T currentValue, T parentValue)
         {
             return Compare(currentValue, parentValue) > 0;
         }

@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace algorithms.Utilities
 {
-    public abstract class HeapType : IComparer<int>
+    public abstract class HeapType<T> : IComparer<T> where T : IComparable<T>
     {
-        public int Compare(int x, int y)
+        public int Compare(T? x, T? y)
         {
-            return x.CompareTo(y);
+            return x!.CompareTo(y!);
         }
 
-        public abstract bool IsPriorityLessThanParent(int currentValue, int parentValue);
-        public abstract bool IsPriorityGreaterThanChild(int currentValue, int childValue);
-        public abstract bool IsLeftChildPriorityGreater(int leftValue, int rightValue);
+        public abstract bool IsPriorityLessThanParent(T currentValue, T parentValue);
+        public abstract bool IsPriorityGreaterThanChild(T currentValue, T childValue);
+        public abstract bool IsLeftChildPriorityGreater(T leftValue, T rightValue);
     }
 }

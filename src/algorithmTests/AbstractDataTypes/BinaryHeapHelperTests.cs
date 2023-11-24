@@ -6,12 +6,12 @@ namespace algorithmTests.AbstractDataTypes
 {
     public class BinaryHeapHelperTests
     {
-        private readonly BinaryHeapHelper _helper;
+        private readonly BinaryHeapHelper<int> _helper;
 
         public BinaryHeapHelperTests(ITestOutputHelper helper)
         {
             Helper = helper;
-            _helper = new BinaryHeapHelper(new MaxHeapType(), new UnitTestLogger(helper));
+            _helper = new BinaryHeapHelper<int>(new MaxHeapType<int>(), new UnitTestLogger(helper));
         }
 
         public ITestOutputHelper Helper { get; }

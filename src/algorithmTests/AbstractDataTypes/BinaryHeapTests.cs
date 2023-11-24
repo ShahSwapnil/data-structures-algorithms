@@ -1,13 +1,14 @@
 ﻿using algorithms.AbstractDataTypes;
 using algorithms.Utilities;
 using algorithmTests.Utilities;
+using System;
 using Xunit.Abstractions;
 
 namespace algorithmTests.AbstractDataTypes
 {
     public class BinaryHeapTests
     {
-        public class MaxBinaryHeapTests : BaseHeapTests
+        public class MaxBinaryHeapTests : BaseHeapTests<int>
         {
             public MaxBinaryHeapTests(ITestOutputHelper helper)
                 : base(helper) { }
@@ -151,10 +152,10 @@ namespace algorithmTests.AbstractDataTypes
             }
         }
 
-        public class MinBinaryHeapTests : BaseHeapTests
+        public class MinBinaryHeapTests : BaseHeapTests<int>
         {
             public MinBinaryHeapTests(ITestOutputHelper helper)
-                : base(new MinHeapType(), helper) { }
+                : base(new MinHeapType<int>(), helper) { }
 
             [Fact]
             public void BinaryHeap_Insert_TwoElement()
@@ -277,20 +278,20 @@ namespace algorithmTests.AbstractDataTypes
             }
         }
 
-        public class BaseHeapTests
+        public class BaseHeapTests<T> where T : IComparable<T>
         {
-            protected BinaryHeapHelper _heap;
+            protected BinaryHeapHelper<T> _heap;
 
             public ITestOutputHelper Helper { get; }
 
             public BaseHeapTests(ITestOutputHelper helper)
-                : this(new MaxHeapType(), helper) { }
+                : this(new MaxHeapType<T>(), helper) { }
 
-            public BaseHeapTests(HeapType heapType, ITestOutputHelper helper)
+            public BaseHeapTests(HeapType<T> heapType, ITestOutputHelper helper)
             {
                 Helper = helper;
                 IAlgoLogger logger = new UnitTestLogger(Helper);
-                _heap = new BinaryHeapHelper(heapType, logger);
+                _heap = new BinaryHeapHelper<T>(heapType, logger);
             }
 
             protected void LogHeap(string description)
