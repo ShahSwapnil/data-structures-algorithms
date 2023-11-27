@@ -24,7 +24,7 @@
 
         public override string ToString()
         {
-            return $"{ID}|{SecondaryID}";
+            return $"{{ {ID}|{SecondaryID} }}";
         }
     }
 }
